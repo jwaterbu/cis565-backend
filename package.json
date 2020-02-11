@@ -1,0 +1,31 @@
+{
+  "name": "store-api",
+  "version": "1.0.0",
+  "description": "A simple API for an online store",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --runInBand",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "compression": "^1.7.4",
+    "config": "^3.2.3",
+    "cors": "^2.8.5",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^3.21.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.12.1",
+    "sequelize": "^5.19.8",
+    "sqlite3": "^4.1.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
+  }
+}
