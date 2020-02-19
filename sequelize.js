@@ -15,15 +15,26 @@ const OrderModel = require('./models/order');
 
 // Create sequelize instance
 if (process.env.NODE_ENV === 'production') {
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
-    protocol: 'postgres'
-  });
+//   sequelize = new Sequelize(process.env.DATABASE_URL, {
+//     dialect: 'postgres',
+//     protocol: 'postgres'
+sequelize = new Sequelize('store', 'root', '565cis', {
+  dialect: 'mysql',
+  host: '/cloudsql/cis-565:us-central1:cis-565',
+  timestamps: false,
+  dialectOptions: {
+    socketPath: '/cloudsql/cis-565:us-central1:cis-565'
+  },
+ });
 } else {
-  sequelize = new Sequelize('database', 'username', 'password', {
-    dialect: 'sqlite',
-    storage: db
-  });
+  sequelize = new Sequelize('store', 'root', '565cis', {
+  dialect: 'mysql',
+  host: '/cloudsql/cis-565:us-central1:cis-565',
+  timestamps: false,
+  dialectOptions: {
+    socketPath: '/cloudsql/cis-565:us-central1:cis-565'
+},
+});
 }
 
 // Use sequelize instance and Sequelize constructor to create model classes

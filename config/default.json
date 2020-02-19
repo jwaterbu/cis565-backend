@@ -1,6 +1,6 @@
 {
-  "jwt_private_key": "",
-  "bcrypt_salt": "",
+  "jwt_private_key": "store_api_jwt_private_key",
+  "bcrypt_salt": "store_api_bcrypt_salt",
   "db": "./db/development.sqlite",
   "port": "3900",
   "admin_middleware_on": true,
