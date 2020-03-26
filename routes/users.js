@@ -70,6 +70,33 @@ router.put('/me', auth, async (req, res) => {
   }
 });
 
+router.get('/:id', [auth, admin], async (req, res) => {
+  const user = await User.findOne({
+    where: { id: req.params.id},
+    attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] },
+    include: [
+      { model: Review, where: { userId: req.params.id }, required: false },
+    ]
+  });
+  res.send(user);
+});
+
+router.put('/:id', [auth, admin], async (req, res) => {
+  try {
+      const user = await User.findOne({
+        where: { id: req.params.id},
+        attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] }
+      });
+      const updated_user = await user.update({
+        username: req.body.username,
+        email: req.body.email
+      });
+      res.send(updated_user);
+  } catch(err) {
+    res.status(400).send(err);
+  }
+});
+
 router.delete('/:id', [auth, admin], async (req, res) => {
   const user = await User.findOne({
     where: { id: req.params.id },
