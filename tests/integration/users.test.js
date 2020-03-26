@@ -190,6 +190,117 @@ describe('/api/users', () => {
     });
   });
 
+  describe('GET /ID', () => {
+    let user, token;
+    const response = async (jwt) => {
+      return await request
+        .get('/api/users/me')
+        .set('x-auth-token', jwt);
+    };
+
+    beforeEach(async () => {
+      user = await User.create({
+        username: 'bob',
+        email: 'bob@example.com',
+        password_digest: '123456'
+      });
+      token = createJWT(user);
+
+       // Create Admin User
+      admin = await User.create({
+      username: 'admin',
+      email: 'admin@example.com',
+      password_digest: '123456',
+      admin: true
+      });
+
+      admintoken = createJWT(admin);
+
+      other_user = await User.create({
+        username: 'seth',
+        email: 'seth@example.com',
+        password_digest: '123456',
+      });
+
+      category = await Category.create({ name: 'Soda' });
+      product1 = await Product.create({
+        title: 'Pepsi',
+        description: 'Pepsi Soda',
+        price: 2.99,
+        small_image_path: "/",
+        large_image_path: "/",
+        categoryId: category.id,
+      });
+      product2 = await Product.create({
+        title: 'Sprite',
+        description: 'Sprite Soda',
+        price: 2.49,
+        small_image_path: "/",
+        large_image_path: "/",
+        categoryId: category.id,
+      });
+      await Review.bulkCreate([
+        { productId: product1.id, userId: user.id, title: 'Great', body: "b1", rating: 5 },
+        { productId: product1.id, userId: user.id, title: 'Bad', body: "b2", rating: 1 },
+        { productId: product2.id, userId: other_user.id, title: 'Meh', body: "b3", rating: 3 }
+      ]);
+    });
+
+
+    it('should return 401 if client not logged in', async () => {
+      const token = '';
+      const res = await response(token);
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should return 403 if user is not an admin', async () => {
+      user = User.build({ admin: false });
+      token = createJWT(user);
+      const res = await response(user.id, token);
+
+      expect(res.status).toBe(403);
+    });
+
+    it('should return 404 if invalid ID', async () => {
+      user = User.build({ admin: true });
+      token = createJWT(user);
+      const user_id = 'id';
+      const res = await response(user_id, token);
+
+      expect(res.status).toBe(404);
+    });
+
+    it('should return 404 if id valid but ID not in DB', async () => {
+      const user_id = 10000;
+      const res = await response(user_id, token);
+
+      expect(res.status).toBe(404);
+    });
+
+    it('should return specific user and associated reviews and orders if valid ID', async () => {
+      const res = await response(user.id, admintoken);
+      const result = await User.findOne({ where: { id: user.id }});
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('username', user.username);
+      expect(res.body).toHaveProperty('email', user.email);
+
+      expect(res.body.reviews.length).toBe(2);
+      expect(res.body.reviews.some(e => e.userId === user.id)).toBeTruthy();
+      expect(res.body.reviews.some(e => e.userId === other_user.id)).toBeFalsy();
+      expect(res.body.reviews.some(e => e.title === 'Great')).toBeTruthy();
+      expect(res.body.reviews.some(e => e.title === 'Bad')).toBeTruthy();
+      expect(res.body.reviews.some(e => e.title === 'Meh')).toBeFalsy();
+      expect(res.body.reviews.some(e => e.body === 'b1')).toBeTruthy();
+      expect(res.body.reviews.some(e => e.body === 'b2')).toBeTruthy();
+      expect(res.body.reviews.some(e => e.body === 'b3')).toBeFalsy();
+      expect(res.body.reviews.some(e => e.rating === 5)).toBeTruthy();
+      expect(res.body.reviews.some(e => e.rating === 1)).toBeTruthy();
+      expect(res.body.reviews.some(e => e.rating === 3)).toBeFalsy();
+    });
+  });
+
   describe('PUT /ME', () => {
     let user, token, user_object;
 
