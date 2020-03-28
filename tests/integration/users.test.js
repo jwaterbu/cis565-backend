@@ -303,6 +303,56 @@ describe('/api/users', () => {
     });
   });
 
+  describe('PUT /ID', () => {
+    let user, token, user_object;
+
+    const response = async (id, object, jwt) => {
+      return await request
+        .put('/api/users/' + id)
+        .set('x-auth-token', jwt)
+        .send(object);
+    };
+
+    beforeEach(async () => {
+      user = await User.create({
+        username: 'bob',
+        email: 'bob@example.com',
+        password_digest: '123456'});
+      user_object = { username: 'binky', email: 'binky@badbunny.com' }
+
+        // Create Admin User
+        admin = await User.create({
+          username: 'admin',
+          email: 'admin@example.com',
+          password_digest: '123456',
+          admin: true
+          });
+        token = createJWT(admin);
+    });
+
+    it('should return 401 if client not logged in', async () => {
+      token = '';
+      const res = await response(user.id, user_object, token);
+
+      expect(res.status).toBe(401);
+    });
+
+    it('should update user if input is valid', async () => {
+      const res = await response(user.id, user_object, token);
+      const result = await User.findOne({ where: { id: user.id }});
+
+      expect(result).toHaveProperty('username', 'binky');
+    });
+
+    it('should return updated user if it is valid', async () => {
+      const res = await response(user.id, user_object, token);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('username', 'binky');
+      expect(res.body).toHaveProperty('email', 'binky@badbunny.com');
+    });
+  });
+
   describe('PUT /ME', () => {
     let user, token, user_object;
 
