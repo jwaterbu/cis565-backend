@@ -192,9 +192,9 @@ describe('/api/users', () => {
 
   describe('GET /ID', () => {
     let user, token;
-    const response = async (jwt) => {
+    const response = async (id, jwt) => {
       return await request
-        .get('/api/users/me')
+        .get('/api/users/' + id)
         .set('x-auth-token', jwt);
     };
 
@@ -249,7 +249,7 @@ describe('/api/users', () => {
 
     it('should return 401 if client not logged in', async () => {
       const token = '';
-      const res = await response(token);
+      const res = await response(user.id, token);
 
       expect(res.status).toBe(401);
     });
@@ -272,6 +272,8 @@ describe('/api/users', () => {
     });
 
     it('should return 404 if id valid but ID not in DB', async () => {
+      user = User.build({ admin: true });
+      token = createJWT(user);
       const user_id = 10000;
       const res = await response(user_id, token);
 

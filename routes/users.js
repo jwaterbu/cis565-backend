@@ -78,7 +78,11 @@ router.get('/:id', [auth, admin], async (req, res) => {
       { model: Review, where: { userId: req.params.id }, required: false },
     ]
   });
-  res.send(user);
+  if (!user) {
+    res.status(404).send('User ID not found');
+  } else {
+    res.send(user);
+  }
 });
 
 router.put('/:id', [auth, admin], async (req, res) => {
