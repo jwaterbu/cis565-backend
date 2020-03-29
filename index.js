@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(compression());
 app.use(cors());
 app.get('/api', (req, res) => {
-  const url = "https://github.com/";
+  const url = "https://github.com/funkyj42/cis565-backend/";
   res.send(`See README for API use instructions: ${url}`);
 });
 app.use(express.json());

@@ -91,9 +91,11 @@ router.put('/:id', [auth, admin], async (req, res) => {
         where: { id: req.params.id},
         attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] }
       });
+
       const updated_user = await user.update({
         username: req.body.username,
-        email: req.body.email
+        email: req.body.email,
+        admin: req.body.admin
       });
       res.send(updated_user);
   } catch(err) {

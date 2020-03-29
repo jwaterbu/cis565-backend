@@ -21,7 +21,7 @@ const config = require('config');
     const admin = await User.create({
       username: 'admin',
       email: 'admin@example.com',
-      password_digest: '123456',
+      password_digest: password_digest,
       admin: true
     });
     // Create User1
