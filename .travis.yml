@@ -1,0 +1,16 @@
+language: node_js
+#jobs:
+#  include:
+#    - stage: test
+before_install:
+  - npm --version
+install:
+  - npm i
+before_script:
+  - export store_api_jwt_private_key=your_private_key
+  - export store_api_bcrypt_salt=5
+  - node sequelize.js
+  - node seed_db
+  - NODE_ENV=test node sequelize.js
+script:
+  - npm test

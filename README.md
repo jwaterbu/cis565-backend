@@ -11,22 +11,22 @@ The basic technology stack is:
 
 ## Project Setup
 1. Install Node.js: https://nodejs.org/
-2. Download project files
-3. ``` $ cd store-api ``` # navigate to project's root directory
-4. ``` $ npm i ``` # install the packages listed in package.json
-5. From the command line, set the value of the following environment variables:
+1. Download project files
+1. ``` $ cd cis565-backend ``` # navigate to project's root directory
+1. ``` $ npm i ``` # install the packages listed in package.json
+1. From the command line, set the value of the following environment variables:
     * jwt_private_key: used to create the JSON Web tokens that allow users to securely log in to the application.
         * Example (Mac): ``` $ export store_api_jwt_private_key=your_private_key ```
     * bcrypt_salt: specifiy the number of rounds used to create the salt used in the hashing algorithm.
         * Example (Mac): ``` $ export store_api_bcrypt_salt=5 ```
-6. ``` $ node sequelize.js ``` # Create development database
-7. ``` $ node seed_db ``` # seed the database with quizzes
-8. ``` $ NODE_ENV=test node sequelize.js ``` # Create test database
-9. ``` $ npm test ``` # Run tests
-10. ``` $ npm start ``` # start server
-11. Done. You can now use a command line tool like ``` $ curl ```, or an application like Postman to test the API endpoints.
-12. ``` $ npm outdated ``` # check for outdated packages
-13. ``` $ npm update ``` # update packages
+1. ``` $ node sequelize.js ``` # Create development database
+1. ``` $ node seed_db ``` # seed the database with quizzes
+1. ``` $ NODE_ENV=test node sequelize.js ``` # Create test database
+1. ``` $ npm test ``` # Run tests
+1. ``` $ npm start ``` # start server
+1. Done. You can now use a command line tool like ``` $ curl ```, or an application like Postman to test the API endpoints.
+1. ``` $ npm outdated ``` # check for outdated packages
+1. ``` $ npm update ``` # update packages
 
 Additional resources that helped me:
 * Express Static Files:
