@@ -1,5 +1,6 @@
 {
   "jwt_private_key": "secret",
   "bcrypt_salt": "10",
-  "db": "./db/test.sqlite"
+  "db": "./db/test.sqlite",
+  "URL": "localhost:8080"
 }

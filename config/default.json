@@ -1,8 +1,9 @@
 {
-  "jwt_private_key": "",
-  "bcrypt_salt": "",
+  "jwt_private_key": "default_key",
+  "bcrypt_salt": "2",
   "db": "./db/development.sqlite",
   "port": "3900",
   "admin_middleware_on": true,
-  "auth_middleware_on": true
+  "auth_middleware_on": true,
+  "URL": "localhost:8080"
 }
