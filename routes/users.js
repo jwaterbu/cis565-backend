@@ -51,20 +51,37 @@ router.get('/me', auth, async (req, res) => {
 });
 
 router.put('/me', auth, async (req, res) => {
-  // To do:
-  // 1. add ability to update password. Don't forget to update token if password is updated.
-  // 2. add ability to update a single property
-
   try {
       const user = await User.findOne({
         where: { id: req.user.id},
         attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] }
       });
-      const updated_user = await user.update({
-        username: req.body.username,
-        email: req.body.email
-      });
-      res.send(updated_user);
+
+      const userUpdates = {};
+      const updatedParams = Object.keys(req.body);
+
+      for(key in Object.keys(req.body)){
+        let currentKey = updatedParams[key];
+        switch(currentKey){
+          case 'id':
+            break;
+          case 'password':
+            const password = req.body[currentKey];
+            const salt_value = Number(config.get("bcrypt_salt"));
+            const salt = await bcrypt.genSalt(salt_value);
+            userUpdates['password_digest'] = await bcrypt.hash(password, salt);
+            break;
+          default:
+            userUpdates[currentKey] = req.body[currentKey];
+        }  
+      }
+
+      const updated_user = await user.update(userUpdates);
+
+      res
+      .header('x-auth-token', createJWT(updated_user))
+      .header('access-control-expose-headers', 'x-auth-token')
+      .send(updated_user);
   } catch(err) {
     res.status(400).send(err);
   }
@@ -92,12 +109,30 @@ router.put('/:id', [auth, admin], async (req, res) => {
         attributes: { exclude: ['password_digest', 'created_at', 'updated_at'] }
       });
 
-      const updated_user = await user.update({
-        username: req.body.username,
-        email: req.body.email,
-        admin: req.body.admin
-      });
-      res.send(updated_user);
+      const userUpdates = {};
+      const updatedParams = Object.keys(req.body);
+
+      for(key in Object.keys(req.body)){
+        let currentKey = updatedParams[key];
+        switch(currentKey){
+          case 'id':
+            break;
+          case 'password':
+            const password = req.body[currentKey];
+            const salt_value = Number(config.get("bcrypt_salt"));
+            const salt = await bcrypt.genSalt(salt_value);
+            userUpdates['password_digest'] = await bcrypt.hash(password, salt);
+            break;
+          default:
+            userUpdates[currentKey] = req.body[currentKey];
+        }  
+      }
+
+      const updated_user = await user.update(userUpdates);
+      res
+      .header('x-auth-token', createJWT(updated_user))
+      .header('access-control-expose-headers', 'x-auth-token')
+      .send(updated_user);
   } catch(err) {
     res.status(400).send(err);
   }
