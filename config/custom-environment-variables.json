@@ -1,5 +1,6 @@
 {
   "jwt_private_key": "store_api_jwt_private_key",
   "bcrypt_salt": "store_api_bcrypt_salt",
-  "db": "store_api_db"
+  "db": "store_api_db",
+  "URL": "localhost:8080"
 }

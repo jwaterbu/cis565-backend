@@ -54,7 +54,7 @@ Order.hasMany(OrderProduct, {
 
 // Create database tables
 sequelize.sync().then(() => {
-  console.log("Database and tables created");
+  console.log("Database and tables created for: ", process.env.NODE_ENV);
 });
 
 module.exports = {
